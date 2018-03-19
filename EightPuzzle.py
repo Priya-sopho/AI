@@ -1,7 +1,6 @@
 ### Data Structures
 #
-# The state of the board is stored in a list. The list stores values for the
-# board in the following positions:
+# The state of the board is stored in a list. The list stores values for the board in the following positions:
 #
 # -------------
 # | 3 | 7 | 6 |
@@ -22,19 +21,19 @@
 # -------------
 #
 # Where 0 denotes the blank tile or space.
-goal_state = [5, 7, 4, 3, 0, 1, 6, 2, 8]
-starting_state = [3, 5, 4, 7, 1, 0, 6, 2, 8]
+goal_state = [5, 3, 6, 7, 0, 2, 4, 1, 8]
+starting_state = [3, 7, 6, 5, 1, 2, 4, 0, 8]
 
 ### Code begins.
 import sys
 
 def display_board( state ):
 	print "-------------"
-	print "| %i | %i | %i |" % (state[0], state[3], state[6])
+	print "| %i | %i | %i |" % (state[0], state[1], state[2])
 	print "-------------"
-	print "| %i | %i | %i |" % (state[1], state[4], state[7])
+	print "| %i | %i | %i |" % (state[3], state[4], state[5])
 	print "-------------"
-	print "| %i | %i | %i |" % (state[2], state[5], state[8])
+	print "| %i | %i | %i |" % (state[6], state[7], state[8])
 	print "-------------"
 	
 def move_up( state ):
@@ -43,10 +42,10 @@ def move_up( state ):
 	new_state = state[:]
 	index = new_state.index( 0 )  #this will return index of blank
 	# Sanity check
-	if index not in [0, 3, 6]:
+	if index not in [0, 1, 2]:
 		# Swap the values.
-		temp = new_state[index - 1]
-		new_state[index - 1] = new_state[index]
+		temp = new_state[index - 3]
+		new_state[index - 3] = new_state[index]
 		new_state[index] = temp
 		return new_state
 	else:
@@ -59,10 +58,10 @@ def move_down( state ):
 	new_state = state[:]
 	index = new_state.index( 0 )
 	# Sanity check
-	if index not in [2, 5, 8]:
+	if index not in [6, 7, 8]:
 		# Swap the values.
-		temp = new_state[index + 1]
-		new_state[index + 1] = new_state[index]
+		temp = new_state[index + 3]
+		new_state[index + 3] = new_state[index]
 		new_state[index] = temp
 		return new_state
 	else:
@@ -74,10 +73,10 @@ def move_left( state ):
 	new_state = state[:]
 	index = new_state.index( 0 )
 	# Sanity check
-	if index not in [0, 1, 2]:
+	if index not in [0, 3, 6]:
 		# Swap the values.
-		temp = new_state[index - 3]
-		new_state[index - 3] = new_state[index]
+		temp = new_state[index - 1]
+		new_state[index - 1] = new_state[index]
 		new_state[index] = temp
 		return new_state
 	else:
@@ -90,10 +89,10 @@ def move_right( state ):
 	new_state = state[:]
 	index = new_state.index( 0 )
 	# Sanity check
-	if index not in [6, 7, 8]:
+	if index not in [2, 5, 8]:
 		# Swap the values.
-		temp = new_state[index + 3]
-		new_state[index + 3] = new_state[index]
+		temp = new_state[index + 1]
+		new_state[index + 1] = new_state[index]
 		new_state[index] = temp
 		return new_state
 	else:
@@ -344,8 +343,38 @@ class Node:
 		
 # Main method
 def main():
-	### CHANGE THIS FUNCTION TO USE bfs, dfs, ids, best_first, hill_climbing or a_star
-	result,states = dfs( starting_state, goal_state )
+
+	##Validating argument
+	if len(sys.argv) == 1:
+		### CHANGE THIS FUNCTION TO USE bfs, dfs, ids, best_first, hill_climbing or a_star as default
+		result,states = dfs( starting_state, goal_state )
+	elif len(sys.argv) == 2:
+		if sys.argv[1] == 'bfs':
+			result,states = bfs( starting_state, goal_state )
+
+		elif sys.argv[1] == 'dfs':
+			result,states = dfs( starting_state, goal_state )
+
+		elif sys.argv[1] == 'ids':
+			result,states = ids( starting_state, goal_state )
+
+		elif sys.argv[1] == 'best_first':
+			result,states = best_first( starting_state, goal_state )
+
+		elif sys.argv[1] == 'hill_climbing':
+			result,states = hill_climbing( starting_state, goal_state )
+
+		elif sys.argv[1] == 'a_star':
+			result,states = a_star( starting_state, goal_state )
+
+		else:
+			print(sys.argv[1] + ' is an invalid algorithm name')
+			sys.exit(1)
+
+	else:
+		print('Invalid number of arguments')
+		sys.exit(1)
+
 	if result == None:
 		print "No solution found"
 	elif result == [None]:
